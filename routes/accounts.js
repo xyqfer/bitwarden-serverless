@@ -79,7 +79,7 @@ const pushTokenHandler = async (req, res) => {
     utils.validationError('User not found: ' + e.message, res);
   }
 
-  const body = utils.normalizeBody(res.body);
+  const body = utils.normalizeBody(req.body);
 
   try {
     device.set('pushToken', body.pushtoken);
