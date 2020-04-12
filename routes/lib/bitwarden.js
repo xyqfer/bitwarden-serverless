@@ -156,8 +156,8 @@ function generateSecret() {
 }
 
 async function touch(object) {
-  // object.set({ updatedAt: new Date().toISOString() });
-  // await object.updateAsync();
+  object.set('bitwarden_updatedAt', new Date().toISOString());
+  await object.save();
 }
 
 function generateToken() {
