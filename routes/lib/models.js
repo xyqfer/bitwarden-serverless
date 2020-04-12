@@ -98,7 +98,7 @@ const User = (() => {
     return user;
   };
 
-  const scan = async () => {
+  const scan = () => {
     return new AV.Query(usersTableName);
   };
 
