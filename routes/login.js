@@ -4,7 +4,7 @@ const { User, Device } = require('./lib/models');
 const { regenerateTokens, hashesMatch, DEFAULT_VALIDITY } = require('./lib/bitwarden');
 
 const handler = async (req, res) => {
-  console.log('Login handler triggered', JSON.stringify(req, null, 2));
+  console.log('Login handler triggered');
   if (!req.body) {
     utils.validationError('Missing request body', res);
     return;

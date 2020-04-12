@@ -3,8 +3,8 @@ const { loadContextFromHeader, touch } = require('./lib/bitwarden');
 const { mapFolder } = require('./lib/mappers');
 const { Folder } = require('./lib/models');
 
-const postHandler = async (req, res, callback) => {
-  console.log('Folder create handler triggered', JSON.stringify(req, null, 2));
+const postHandler = async (req, res) => {
+  console.log('Folder create handler triggered');
 
   if (!req.body) {
     utils.validationError('Missing request body', res);
@@ -15,7 +15,7 @@ const postHandler = async (req, res, callback) => {
 
   let user;
   try {
-    ({ user } = await loadContextFromHeader(event.headers.Authorization));
+    ({ user } = await loadContextFromHeader(req.headers.authorization));
   } catch (e) {
     utils.validationError('User not found: ' + e.message, res);
     return;
@@ -40,7 +40,7 @@ const postHandler = async (req, res, callback) => {
 };
 
 const putHandler = async (req, res) => {
-  console.log('Folder edit handler triggered', JSON.stringify(req, null, 2));
+  console.log('Folder edit handler triggered');
   if (!req.body) {
     utils.validationError('Missing request body', res);
     return;
@@ -50,7 +50,7 @@ const putHandler = async (req, res) => {
 
   let user;
   try {
-    ({ user } = await loadContextFromHeader(req.headers.Authorization));
+    ({ user } = await loadContextFromHeader(req.headers.authorization));
   } catch (e) {
     utils.validationError('Cannot load user from access token: ' + e, res);
     return;
@@ -86,16 +86,16 @@ const putHandler = async (req, res) => {
 };
 
 const deleteHandler = async (req, res) => {
-  console.log('Folder delete handler triggered', JSON.stringify(req, null, 2));
+  console.log('Folder delete handler triggered');
 
   let user;
   try {
-    ({ user } = await loadContextFromHeader(event.headers.Authorization));
+    ({ user } = await loadContextFromHeader(req.headers.authorization));
   } catch (e) {
     utils.validationError('User not found', res);
   }
 
-  const folderUuid = event.pathParameters.uuid;
+  const folderUuid = req.params.uuid;
   if (!folderUuid) {
     utils.validationError('Missing folder ID', res);
   }

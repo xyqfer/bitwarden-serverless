@@ -3,7 +3,7 @@ const utils = require('./lib/api_utils');
 const { User } = require('./lib/models');
 
 const handler = async (req, res) => {
-  console.log('Prelogin handler triggered', JSON.stringify(req, null, 2));
+  console.log('Prelogin handler triggered');
 
   if (!req.body) {
     utils.validationError('Request body is missing', res);

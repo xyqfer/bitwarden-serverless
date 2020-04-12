@@ -24,8 +24,9 @@ const CORS_HEADERS = {
 };
 
 function okResponse(body, res) {
-  console.log('Success response', { body });
-  res.status(200).body(typeof body === 'string' ? body : JSON.stringify(body));
+  console.log('Success response');
+  if(body === '') body = '{}';
+  res.json(typeof body === 'string' ? JSON.parse(body): body);
 }
 
 function validationError(message, res) {

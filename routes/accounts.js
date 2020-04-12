@@ -4,11 +4,11 @@ const { getRevisionDateAsMillis, mapUser } = require('./lib/mappers');
 const { Device } = require('./lib/models');
 
 const profileHandler = async (req, res) => {
-  console.log('Account profile handler triggered', JSON.stringify(req, null, 2));
+  console.log('Account profile handler triggered');
 
   let user;
   try {
-    ({ user } = await loadContextFromHeader(req.headers.Authorization));
+    ({ user } = await loadContextFromHeader(req.headers.authorization));
   } catch (e) {
     utils.validationError('User not found: ' + e.message, res);
   }
@@ -21,11 +21,11 @@ const profileHandler = async (req, res) => {
 };
 
 const putProfileHandler = async (req, res) => {
-  console.log('Update account profile handler triggered', JSON.stringify(req, null, 2));
+  console.log('Update account profile handler triggered');
 
   let user;
   try {
-    ({ user } = await loadContextFromHeader(req.headers.Authorization));
+    ({ user } = await loadContextFromHeader(req.headers.authorization));
   } catch (e) {
     utils.validationError('User not found: ' + e.message, res);
   }
@@ -48,11 +48,11 @@ const putProfileHandler = async (req, res) => {
 };
 
 const revisionDateHandler = async (req, res) => {
-  console.log('Account revision date handler triggered', JSON.stringify(req, null, 2));
+  console.log('Account revision date handler triggered');
 
   let user;
   try {
-    ({ user } = await loadContextFromHeader(req.headers.Authorization));
+    ({ user } = await loadContextFromHeader(req.headers.authorization));
   } catch (e) {
     utils.validationError('User not found: ' + e.message, res);
   }
@@ -65,11 +65,11 @@ const revisionDateHandler = async (req, res) => {
 };
 
 const pushTokenHandler = async (req, res) => {
-  console.log('Push token handler triggered', JSON.stringify(req, null, 2));
+  console.log('Push token handler triggered');
 
   let device;
   try {
-    await loadContextFromHeader(req.headers.Authorization);
+    await loadContextFromHeader(req.headers.authorization);
     device = await Device.getAsync(req.params.uuid);
 
     if (!device) {

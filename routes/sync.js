@@ -4,11 +4,11 @@ const { mapUser, mapCipher, mapFolder } = require('./lib/mappers');
 const { Cipher, Folder } = require('./lib/models');
 
 const handler = async (req, res) => {
-  console.log('Sync handler triggered', JSON.stringify(req, null, 2));
+  console.log('Sync handler triggered');
 
   let user;
   try {
-    ({ user } = await loadContextFromHeader(req.headers.Authorization));
+    ({ user } = await loadContextFromHeader(req.headers.authorization));
   } catch (e) {
     utils.validationError('User not found', res);
     return;
@@ -17,10 +17,10 @@ const handler = async (req, res) => {
   let ciphers;
   let folders;
   try {
-    [ciphers, folders] = await Promise.all(
+    [ciphers, folders] = await Promise.all([
       Cipher.query(user.get('uuid')).find(),
       Folder.query(user.get('uuid')).find()
-    );
+    ]);
   } catch (e) {
     utils.serverError('Server error loading vault items', e, res);
     return;

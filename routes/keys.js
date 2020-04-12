@@ -20,7 +20,7 @@ const handler = async (req, res) => {
   let user;
   let device;
   try {
-    ({ user, device } = await loadContextFromHeader(event.headers.Authorization));
+    ({ user, device } = await loadContextFromHeader(req.headers.authorization));
   } catch (e) {
     utils.validationError('User not found: ' + e.message, res);
     return;

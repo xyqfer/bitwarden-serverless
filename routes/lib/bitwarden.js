@@ -141,7 +141,7 @@ function buildUserDocument(body) {
     jwtSecret: generateSecret(),
     culture: 'en-US', // Hard-coded unless supplied from elsewhere
     premium: true,
-    emailVerified: true, // Web-vault requires verified e-mail
+    emailVerified: false, // Web-vault requires verified e-mail
     version: USER_MODEL_VERSION,
   };
   if (body.keys) {
@@ -151,14 +151,13 @@ function buildUserDocument(body) {
   return user;
 }
 
-
 function generateSecret() {
   return crypto.randomBytes(64).toString('hex');
 }
 
 async function touch(object) {
-  object.set({ updatedAt: new Date().toISOString() });
-  await object.updateAsync();
+  // object.set({ updatedAt: new Date().toISOString() });
+  // await object.updateAsync();
 }
 
 function generateToken() {

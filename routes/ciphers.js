@@ -4,18 +4,18 @@ const { mapCipher } = require('./lib/mappers');
 const { Cipher } = require('./lib/models');
 
 const postHandler = async (req, res) => {
-  console.log('Cipher create handler triggered', JSON.stringify(req, null, 2));
+  console.log('Cipher create handler triggered');
 
   if (!req.body) {
     utils.validationError('Request body is missing', res);
     return;
   }
 
-  const body = utils.normalizeBody(res.body);
+  const body = utils.normalizeBody(req.body);
 
   let user;
   try {
-    ({ user } = await loadContextFromHeader(event.headers.Authorization));
+    ({ user } = await loadContextFromHeader(req.headers.authorization));
   } catch (e) {
     utils.validationError('User not found: ' + e.message, res);
     return;
@@ -38,7 +38,7 @@ const postHandler = async (req, res) => {
 };
 
 const putHandler = async (req, res) => {
-  console.log('Cipher edit handler triggered', JSON.stringify(req, null, 2));
+  console.log('Cipher edit handler triggered');
   if (!req.body) {
     utils.validationError('Request body is missing', res);
     return;
@@ -48,7 +48,7 @@ const putHandler = async (req, res) => {
 
   let user;
   try {
-    ({ user } = await loadContextFromHeader(event.headers.Authorization));
+    ({ user } = await loadContextFromHeader(req.headers.authorization));
   } catch (e) {
     utils.validationError('User not found: ' + e.message, res);
     return;
@@ -86,16 +86,16 @@ const putHandler = async (req, res) => {
 };
 
 const deleteHandler = async (req, res) => {
-  console.log('Cipher delete handler triggered', JSON.stringify(req, null, 2));
+  console.log('Cipher delete handler triggered');
 
   let user;
   try {
-    ({ user } = await loadContextFromHeader(event.headers.Authorization));
+    ({ user } = await loadContextFromHeader(req.headers.authorization));
   } catch (e) {
     utils.validationError('User not found: ' + e.message, res);
   }
 
-  const cipherUuid = event.pathParameters.uuid;
+  const cipherUuid = req.params.uuid;
   if (!cipherUuid) {
     utils.validationError('Missing vault item ID', res);
   }
