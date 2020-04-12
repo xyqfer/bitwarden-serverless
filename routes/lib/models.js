@@ -9,20 +9,20 @@ const folderTableName = 'FOLDERS_TABLE';
 const CIPHER_MODEL_VERSION = 1;
 const USER_MODEL_VERSION = 2;
 
-const Device2 = dynogels.define('Device', {
-  hashKey: 'uuid',
-  timestamps: true,
-  tableName: devicesTableName,
+// const Device2 = dynogels.define('Device', {
+//   hashKey: 'uuid',
+//   timestamps: true,
+//   tableName: devicesTableName,
 
-  schema: {
-    uuid: dynogels.types.uuid(),
-    userUuid: Joi.string().required(),
-    name: Joi.string().allow(null),
-    type: Joi.number(),
-    pushToken: Joi.string().allow(null),
-    refreshToken: Joi.string().allow(null),
-  },
-});
+//   schema: {
+//     uuid: dynogels.types.uuid(),
+//     userUuid: Joi.string().required(),
+//     name: Joi.string().allow(null),
+//     type: Joi.number(),
+//     pushToken: Joi.string().allow(null),
+//     refreshToken: Joi.string().allow(null),
+//   },
+// });
 
 const Device = (() => {
   const getAsync = async (uuid) => {
@@ -51,31 +51,31 @@ const Device = (() => {
   };
 });
 
-const User2 = dynogels.define('User', {
-  hashKey: 'uuid',
-  timestamps: true,
-  tableName: usersTableName,
+// const User2 = dynogels.define('User', {
+//   hashKey: 'uuid',
+//   timestamps: true,
+//   tableName: usersTableName,
 
-  schema: {
-    uuid: dynogels.types.uuid(),
-    email: Joi.string().email().required(),
-    emailVerified: Joi.boolean(),
-    premium: Joi.boolean(),
-    name: Joi.string().allow(null),
-    passwordHash: Joi.string().required(),
-    passwordHint: Joi.string().allow(null),
-    key: Joi.string(),
-    jwtSecret: Joi.string().required(),
-    privateKey: Joi.binary(),
-    publicKey: Joi.binary(),
-    totpSecret: Joi.string().allow(null),
-    totpSecretTemp: Joi.string().allow(null),
-    securityStamp: dynogels.types.uuid(),
-    culture: Joi.string(),
-    kdfIterations: Joi.number().min(5000).max(1e6),
-    version: Joi.number().allow(null),
-  },
-});
+//   schema: {
+//     uuid: dynogels.types.uuid(),
+//     email: Joi.string().email().required(),
+//     emailVerified: Joi.boolean(),
+//     premium: Joi.boolean(),
+//     name: Joi.string().allow(null),
+//     passwordHash: Joi.string().required(),
+//     passwordHint: Joi.string().allow(null),
+//     key: Joi.string(),
+//     jwtSecret: Joi.string().required(),
+//     privateKey: Joi.binary(),
+//     publicKey: Joi.binary(),
+//     totpSecret: Joi.string().allow(null),
+//     totpSecretTemp: Joi.string().allow(null),
+//     securityStamp: dynogels.types.uuid(),
+//     culture: Joi.string(),
+//     kdfIterations: Joi.number().min(5000).max(1e6),
+//     version: Joi.number().allow(null),
+//   },
+// });
 
 const User = (() => {
   const getAsync = async (uuid) => {
@@ -109,31 +109,31 @@ const User = (() => {
   };
 });
 
-const Cipher2 = dynogels.define('Cipher', {
-  hashKey: 'userUuid',
-  rangeKey: 'uuid',
-  timestamps: true,
-  tableName: cipherTableName,
+// const Cipher2 = dynogels.define('Cipher', {
+//   hashKey: 'userUuid',
+//   rangeKey: 'uuid',
+//   timestamps: true,
+//   tableName: cipherTableName,
 
-  schema: {
-    userUuid: Joi.string().required(),
-    uuid: dynogels.types.uuid(), // Auto-generated
-    folderUuid: Joi.string().allow(null),
-    organizationUuid: Joi.string().allow(null),
-    type: Joi.number(),
-    version: Joi.number().allow(null),
-    data: Joi.object().allow(null),
-    favorite: Joi.boolean(),
-    attachments: Joi.any().allow(null),
-    name: Joi.string().allow(null),
-    notes: Joi.string().allow(null),
-    fields: Joi.any().allow(null),
-    login: Joi.object().allow(null),
-    securenote: Joi.object().allow(null),
-    identity: Joi.object().allow(null),
-    card: Joi.object().allow(null),
-  },
-});
+//   schema: {
+//     userUuid: Joi.string().required(),
+//     uuid: dynogels.types.uuid(), // Auto-generated
+//     folderUuid: Joi.string().allow(null),
+//     organizationUuid: Joi.string().allow(null),
+//     type: Joi.number(),
+//     version: Joi.number().allow(null),
+//     data: Joi.object().allow(null),
+//     favorite: Joi.boolean(),
+//     attachments: Joi.any().allow(null),
+//     name: Joi.string().allow(null),
+//     notes: Joi.string().allow(null),
+//     fields: Joi.any().allow(null),
+//     login: Joi.object().allow(null),
+//     securenote: Joi.object().allow(null),
+//     identity: Joi.object().allow(null),
+//     card: Joi.object().allow(null),
+//   },
+// });
 
 const Cipher = (() => {
   const getAsync = async (userUuid, uuid) => {
@@ -180,18 +180,18 @@ const Cipher = (() => {
   };
 });
 
-const Folder2 = dynogels.define('Folder', {
-  hashKey: 'userUuid',
-  rangeKey: 'uuid',
-  timestamps: true,
-  tableName: folderTableName,
+// const Folder2 = dynogels.define('Folder', {
+//   hashKey: 'userUuid',
+//   rangeKey: 'uuid',
+//   timestamps: true,
+//   tableName: folderTableName,
 
-  schema: {
-    userUuid: Joi.string().required(),
-    uuid: dynogels.types.uuid(), // Auto-generated
-    name: Joi.string().required(),
-  },
-});
+//   schema: {
+//     userUuid: Joi.string().required(),
+//     uuid: dynogels.types.uuid(), // Auto-generated
+//     name: Joi.string().required(),
+//   },
+// });
 
 const Folder = (() => {
   const getAsync = async (userUuid, uuid) => {
