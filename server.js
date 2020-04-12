@@ -15,24 +15,25 @@ const app = require('./app');
 // LeanEngine 运行时会分配端口并赋值到该变量。
 const PORT = parseInt(process.env.LEANCLOUD_APP_PORT || process.env.PORT || 3000);
 
-const https = require('https');
-const httpsServer = https.createServer({
-    key: fs.readFileSync('./local-key.pem', 'utf8'),
-    cert: fs.readFileSync('./local.pem', 'utf8'),
-}, app);
+// const fs = require('fs');
+// const https = require('https');
+// const httpsServer = https.createServer({
+//     key: fs.readFileSync('./local-key.pem', 'utf8'),
+//     cert: fs.readFileSync('./local.pem', 'utf8'),
+// }, app);
 
-httpsServer.listen(PORT, () => {
-    console.log('Https app is running on port:', PORT);
-});
-
-// app.listen(PORT, function (err) {
-//     console.log('Node app is running on port:', PORT);
-
-//     // 注册全局未捕获异常处理器
-//     process.on('uncaughtException', function (err) {
-//         console.error('Caught exception:', err.stack);
-//     });
-//     process.on('unhandledRejection', function (reason, p) {
-//         console.error('Unhandled Rejection at: Promise ', p, ' reason: ', reason.stack);
-//     });
+// httpsServer.listen(PORT, () => {
+//     console.log('Https app is running on port:', PORT);
 // });
+
+app.listen(PORT, function (err) {
+    console.log('Node app is running on port:', PORT);
+
+    // 注册全局未捕获异常处理器
+    process.on('uncaughtException', function (err) {
+        console.error('Caught exception:', err.stack);
+    });
+    process.on('unhandledRejection', function (reason, p) {
+        console.error('Unhandled Rejection at: Promise ', p, ' reason: ', reason.stack);
+    });
+});
