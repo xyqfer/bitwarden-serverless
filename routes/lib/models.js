@@ -31,9 +31,14 @@ const Device = (() => {
     return device;
   };
 
+  const scan = () => {
+    return new AV.Query(devicesTableName);
+  };
+
   return {
     getAsync,
-    createAsync
+    createAsync,
+    scan
   };
 })();
 
