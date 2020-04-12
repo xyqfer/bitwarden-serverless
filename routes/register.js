@@ -2,8 +2,8 @@ const utils = require('./lib/api_utils');
 const { User } = require('./lib/models');
 const { buildUserDocument } = require('./lib/bitwarden');
 
-const handler = async (req, res, callback) => {
-  console.log('Registration handler triggered', JSON.stringify(req, null, 2));
+const handler = async (req, res) => {
+  console.log('Registration handler triggered');
   if (process.env.DISABLE_USER_REGISTRATION === 'true') {
     utils.validationError('Signups are not permitted', res);
     return;
