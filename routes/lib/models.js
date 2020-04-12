@@ -49,7 +49,7 @@ const Device = (() => {
     getAsync,
     createAsync
   };
-});
+})();
 
 // const User2 = dynogels.define('User', {
 //   hashKey: 'uuid',
@@ -107,7 +107,7 @@ const User = (() => {
     scan,
     createAsync
   };
-});
+})();
 
 // const Cipher2 = dynogels.define('Cipher', {
 //   hashKey: 'userUuid',
@@ -178,7 +178,7 @@ const Cipher = (() => {
     destroyAsync,
     query,
   };
-});
+})();
 
 // const Folder2 = dynogels.define('Folder', {
 //   hashKey: 'userUuid',
@@ -224,7 +224,7 @@ const Folder = (() => {
     destroyAsync,
     query
   };
-});
+})();
 
 module.exports = {
   CIPHER_MODEL_VERSION,
