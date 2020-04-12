@@ -86,7 +86,8 @@ const pushTokenHandler = async (req, res) => {
 
     device = await device.save();
 
-    res.status(204).set('Content-Type', 'text/plain');
+    res.set('Content-Type', 'text/plain');
+    res.status(204).send('');
   } catch (e) {
     utils.serverError(e.toString(), null, res);
   }
