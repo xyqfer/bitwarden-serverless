@@ -104,6 +104,8 @@ const Cipher = (() => {
       cipher.set(key, value);
     });
 
+    cipher.set('uuid', uuidv4());
+
     await cipher.save();
     return cipher;
   };
