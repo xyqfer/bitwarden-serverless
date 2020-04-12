@@ -1,23 +1,22 @@
-import jwt from 'jsonwebtoken';
-import crypto from 'crypto';
-import bufferEq from 'buffer-equal-constant-time';
-import entries from 'object.entries';
-import mapKeys from 'lodash/mapKeys';
-import {
+const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+const bufferEq = require('buffer-equal-constant-time');
+const { mapKeys } = require('lodash');
+const {
   User, Device, CIPHER_MODEL_VERSION, USER_MODEL_VERSION,
-} from './models';
-import { KDF_PBKDF2_ITERATIONS_DEFAULT } from './crypto';
+} = require('./models');
+const { KDF_PBKDF2_ITERATIONS_DEFAULT } = require('./crypto');
 
 const JWT_DEFAULT_ALGORITHM = 'HS256';
 
-export const TYPE_LOGIN = 1;
-export const TYPE_NOTE = 2;
-export const TYPE_CARD = 3;
-export const TYPE_IDENTITY = 4;
+const TYPE_LOGIN = 1;
+const TYPE_NOTE = 2;
+const TYPE_CARD = 3;
+const TYPE_IDENTITY = 4;
 
-export const DEFAULT_VALIDITY = 60 * 60;
+const DEFAULT_VALIDITY = 60 * 60;
 
-export async function loadContextFromHeader(header) {
+async function loadContextFromHeader(header) {
   if (!header) {
     throw new Error('Missing Authorization header');
   }
@@ -43,7 +42,7 @@ export async function loadContextFromHeader(header) {
   return { user, device };
 }
 
-export function regenerateTokens(user, device) {
+function regenerateTokens(user, device) {
   const expiryDate = new Date();
   expiryDate.setTime(expiryDate.getTime() + (DEFAULT_VALIDITY * 1000));
 
@@ -79,11 +78,11 @@ export function regenerateTokens(user, device) {
   return tokens;
 }
 
-export function hashesMatch(hashA, hashB) {
+function hashesMatch(hashA, hashB) {
   return hashA && hashB && bufferEq(Buffer.from(hashA), Buffer.from(hashB));
 }
 
-export function buildCipherDocument(body, user) {
+function buildCipherDocument(body, user) {
   const params = {
     userUuid: user.get('uuid'),
     organizationUuid: body.organizationid,
@@ -109,7 +108,7 @@ export function buildCipherDocument(body, user) {
 
   if (additionalParamsType !== null && additionalParamsType in body) {
     params[additionalParamsType] = {};
-    entries(body[additionalParamsType]).forEach(([key, value]) => {
+    Object.entries(body[additionalParamsType]).forEach(([key, value]) => {
       let paramValue = value;
       if (ucfirst(key) === 'Uris' && value) {
         paramValue = value.map(val => mapKeys(val, (_, uriKey) => ucfirst(uriKey)));
@@ -121,7 +120,7 @@ export function buildCipherDocument(body, user) {
   if (body.fields && Array.isArray(body.fields)) {
     params.fields = body.fields.map((field) => {
       const vals = {};
-      entries(field).forEach(([key, value]) => {
+      Object.entries(field).forEach(([key, value]) => {
         vals[ucfirst(key)] = value;
       });
 
@@ -132,7 +131,7 @@ export function buildCipherDocument(body, user) {
   return params;
 }
 
-export function buildUserDocument(body) {
+function buildUserDocument(body) {
   const user = {
     email: body.email.toLowerCase(),
     passwordHash: body.masterpasswordhash,
@@ -153,11 +152,11 @@ export function buildUserDocument(body) {
 }
 
 
-export function generateSecret() {
+function generateSecret() {
   return crypto.randomBytes(64).toString('hex');
 }
 
-export async function touch(object) {
+async function touch(object) {
   object.set({ updatedAt: new Date().toISOString() });
   await object.updateAsync();
 }
@@ -173,3 +172,18 @@ function generateToken() {
 function ucfirst(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
+
+module.exports = {
+  TYPE_LOGIN,
+  TYPE_NOTE,
+  TYPE_CARD,
+  TYPE_IDENTITY,
+  DEFAULT_VALIDITY,
+  loadContextFromHeader,
+  regenerateTokens,
+  hashesMatch,
+  buildCipherDocument,
+  buildUserDocument,
+  generateSecret,
+  touch,
+};

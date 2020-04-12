@@ -1,6 +1,6 @@
-import { normalizeBody, validationError, okResponse } from './lib/api_utils';
-import { Cipher, Folder } from './lib/models';
-import { loadContextFromHeader, buildCipherDocument, touch } from './lib/bitwarden';
+const { normalizeBody, validationError, okResponse } = require('./lib/api_utils');
+const { Cipher, Folder } = require('./lib/models');
+const { loadContextFromHeader, buildCipherDocument, touch } = require('./lib/bitwarden');
 
 const MAX_RETRIES = 4;
 
@@ -43,7 +43,7 @@ const resolveHandler = async (promiseList, user, fcb) => {
   };
 };
 
-export const postHandler = async (event, context, callback) => {
+const postHandler = async (event, context, callback) => {
   console.log('Bitwarden import handler triggered');
 
   /**
@@ -143,4 +143,8 @@ export const postHandler = async (event, context, callback) => {
   await touch(user);
 
   callback(null, okResponse(''));
+};
+
+module.exports = {
+  postHandler,
 };

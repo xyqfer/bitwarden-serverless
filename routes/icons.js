@@ -1,5 +1,4 @@
-
-export const handler = (event, context, callback) => {
+const handler = (event, context, callback) => {
   console.log('Icon handler triggered', JSON.stringify(event, null, 2));
 
   callback(null, {
@@ -8,4 +7,8 @@ export const handler = (event, context, callback) => {
       Location: 'https://' + event.pathParameters.domain + '/favicon.ico',
     },
   });
+};
+
+module.exports = {
+  handler
 };

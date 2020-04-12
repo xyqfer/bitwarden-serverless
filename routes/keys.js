@@ -1,18 +1,18 @@
-import querystring from 'querystring';
-import * as utils from './lib/api_utils';
-import { regenerateTokens, loadContextFromHeader, DEFAULT_VALIDITY } from './lib/bitwarden';
+const querystring = require('querystring');
+const utils = require('./lib/api_utils');
+const { regenerateTokens, loadContextFromHeader, DEFAULT_VALIDITY } = require('./lib/bitwarden');
 
-export const handler = async (event, context, callback) => {
-  console.log('Keys handler triggered', JSON.stringify(event, null, 2));
-  if (!event.body) {
-    callback(null, utils.validationError('Missing request body'));
+const handler = async (req, res) => {
+  console.log('Keys handler triggered', JSON.stringify(req, null, 2));
+  if (!req.body) {
+    utils.validationError('Missing request body', res);
     return;
   }
 
+  const contentType = req.headers['Content-Type'].split(';')[0];
   let body;
-  const contentType = event.headers['Content-Type'].split(';')[0];
   if (contentType === 'application/json') {
-    body = utils.normalizeBody(JSON.parse(event.body));
+    body = utils.normalizeBody(req.body);
   } else {
     body = utils.normalizeBody(querystring.parse(event.body));
   }
@@ -22,13 +22,13 @@ export const handler = async (event, context, callback) => {
   try {
     ({ user, device } = await loadContextFromHeader(event.headers.Authorization));
   } catch (e) {
-    callback(null, utils.validationError('User not found: ' + e.message));
+    utils.validationError('User not found: ' + e.message, res);
     return;
   }
 
   const re = /^2\..+\|.+/;
   if (!re.test(body.encryptedprivatekey)) {
-    callback(null, utils.validationError('Invalid key'));
+    utils.validationError('Invalid key', res);
     return;
   }
 
@@ -43,7 +43,7 @@ export const handler = async (event, context, callback) => {
   await user.updateAsync();
 
   try {
-    callback(null, utils.okResponse({
+    utils.okResponse({
       access_token: tokens.accessToken,
       expires_in: DEFAULT_VALIDITY,
       token_type: 'Bearer',
@@ -61,8 +61,10 @@ export const handler = async (event, context, callback) => {
       SecurityStamp: user.get('securityStamp'),
       Organizations: '[]',
       Object: 'profile',
-    }));
+    }, res);
   } catch (e) {
-    callback(null, utils.serverError('Internal error', e));
+    utils.serverError('Internal error', e, res);
   }
 };
+
+module.exports = handler;
