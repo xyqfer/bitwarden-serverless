@@ -3,6 +3,7 @@ const timeout = require('connect-timeout');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const expressWs = require('express-ws');
 const AV = require('leanengine');
 const cors = require('cors');
 
@@ -66,6 +67,14 @@ app.post('/api/folders', require('./routes/folders').postHandler);
 app.put('/api/folders/:uuid', require('./routes/folders').putHandler);
 app.delete('/api/folders/:uuid', require('./routes/folders').deleteHandler);
 app.get('/icons/:domain/icon.png', require('./routes/icons'));
+
+expressWs(app);
+
+app.ws('/notifications/hub', function (ws) {
+    ws.on('message', function (msg) {
+        console.log('notifications', msg);
+    });
+});
 
 app.use(function (req, res, next) {
     // 如果任何一个路由都没有返回响应，则抛出一个 404 异常给后续的异常处理器
