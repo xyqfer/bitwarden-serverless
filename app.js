@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const expressWs = require('express-ws');
 const AV = require('leanengine');
 const cors = require('cors');
+const { loadContextFromHeader } = require('./lib/bitwarden');
 
 // 加载云函数定义，你可以将云函数拆分到多个文件方便管理，但需要在主文件中加载它们
 require('./cloud');
@@ -69,11 +70,20 @@ app.delete('/api/folders/:uuid', require('./routes/folders').deleteHandler);
 app.get('/icons/:domain/icon.png', require('./routes/icons'));
 
 expressWs(app);
-app.ws('/notifications/hub', function (ws) {
-    ws.on('message', function (msg) {
+app.ws('/notifications/hub', async (ws, req) => {
+    const { access_token } = req.query;
+
+    try {
+        const { user } = await loadContextFromHeader(access_token);
+        console.log('user', user);
+    } catch(e) {
+        console.error('User not found:', access_token);
+    }
+
+    ws.on('message', (msg) => {
         console.log('Notifications handle', msg);
 
-        try {
+        if (typeof msg === 'string') {
             const data = JSON.parse(msg.slice(0, -1));
 
             if (data.protocol === 'messagepack' && data.version === 1) {
@@ -81,11 +91,8 @@ app.ws('/notifications/hub', function (ws) {
                 const INITIAL_RESPONSE = [0x7b, 0x7d, RECORD_SEPARATOR];
 
                 ws.send(Buffer.from(INITIAL_RESPONSE));
-            } else {
-                ws.send(msg);
             }
-        } catch(e) {
-            console.error('handle err:', e);
+        } else {
             ws.send(msg);
         }
     });
