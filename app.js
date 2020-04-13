@@ -81,6 +81,8 @@ app.ws('/notifications/hub', function (ws) {
                 const INITIAL_RESPONSE = [0x7b, 0x7d, RECORD_SEPARATOR];
 
                 ws.send(Buffer.from(INITIAL_RESPONSE));
+            } else {
+                ws.send(msg);
             }
         } catch(e) {
             console.error('handle err:', e);
