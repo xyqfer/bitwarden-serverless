@@ -75,7 +75,6 @@ app.ws('/notifications/hub', async (ws, req) => {
 
     try {
         const { user } = await loadContextFromHeader(access_token);
-        console.log('user', user);
     } catch(e) {
         console.error('User not found:', access_token);
     }
