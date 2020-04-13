@@ -69,10 +69,22 @@ app.delete('/api/folders/:uuid', require('./routes/folders').deleteHandler);
 app.get('/icons/:domain/icon.png', require('./routes/icons'));
 
 expressWs(app);
-
 app.ws('/notifications/hub', function (ws) {
     ws.on('message', function (msg) {
         console.log('notifications', msg);
+
+        try {
+            const data = JSON.parse(msg);
+
+            if (data.protocol === 'messagepack' && data.version === 1) {
+                const RECORD_SEPARATOR = 0x1e;
+                const INITIAL_RESPONSE = [0x7b, 0x7d, RECORD_SEPARATOR];
+
+                ws.send(Buffer.from(INITIAL_RESPONSE));
+            }
+        } catch(e) {
+            console.error('handle err:', e);
+        }
     });
 });
 
