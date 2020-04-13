@@ -65,6 +65,7 @@ app.delete('/api/ciphers/:uuid', require('./routes/ciphers').deleteHandler);
 app.post('/api/folders', require('./routes/folders').postHandler);
 app.put('/api/folders/:uuid', require('./routes/folders').putHandler);
 app.delete('/api/folders/:uuid', require('./routes/folders').deleteHandler);
+app.get('/icons/:domain/icon.png', require('./routes/icons'));
 
 app.use(function (req, res, next) {
     // 如果任何一个路由都没有返回响应，则抛出一个 404 异常给后续的异常处理器

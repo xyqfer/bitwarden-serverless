@@ -1,14 +1,8 @@
-const handler = (event, context, callback) => {
-  console.log('Icon handler triggered', JSON.stringify(event, null, 2));
+const handler = (req, res) => {
+  console.log('Icon handler triggered');
 
-  callback(null, {
-    statusCode: 302,
-    headers: {
-      Location: 'https://' + event.pathParameters.domain + '/favicon.ico',
-    },
-  });
+  const icon = encodeURIComponent('https://' + req.params.domain + '/favicon.ico');
+  res.redirect(process.env.IMAGE_PROXY + icon);
 };
 
-module.exports = {
-  handler
-};
+module.exports = handler;
