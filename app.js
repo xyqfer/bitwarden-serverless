@@ -74,7 +74,7 @@ app.ws('/notifications/hub', function (ws) {
         console.log('notifications', msg);
 
         try {
-            const data = JSON.parse(msg);
+            const data = JSON.parse(msg.trim());
 
             if (data.protocol === 'messagepack' && data.version === 1) {
                 const RECORD_SEPARATOR = 0x1e;
