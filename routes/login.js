@@ -64,14 +64,12 @@ const handler = async (req, res) => {
           });
 
           if (!verified) {
-            res.status(400).send(
-              JSON.stringify({
-                error: 'invalid_grant',
-                error_description: 'Two factor required.',
-                TwoFactorProviders: [0],
-                TwoFactorProviders2: { 0: null },
-              })
-            );
+            res.status(400).send({
+              error: 'invalid_grant',
+              error_description: 'Two factor required.',
+              TwoFactorProviders: [0],
+              TwoFactorProviders2: { 0: null },
+            });
             return;
           }
         }

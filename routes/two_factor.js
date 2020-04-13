@@ -2,58 +2,58 @@ const speakeasy = require('speakeasy');
 const qrcode = require('qrcode');
 const { User } = require('./lib/models');
 
-const setupHandler = async (event, context, callback) => {
-  console.log('2FA setup handler triggered', JSON.stringify(event, null, 2));
+const setupHandler = async (email) => {
+  console.log('2FA setup handler triggered');
 
-  if (!event.email) {
-    callback(null, 'E-mail must be supplied');
+  if (!email) {
+    console.log('E-mail must be supplied');
     return;
   }
 
   let user;
   try {
     [user] = (await User.scan()
-      .where('email').equals(event.email.toLowerCase())
-      .execAsync()).Items;
+      .equalTo('email', email.toLowerCase())
+      .find());
   } catch (e) {
-    callback(null, 'User not found');
+    console.log('User not found');
     return;
   }
 
   try {
     const secret = speakeasy.generateSecret();
 
-    user.set({ totpSecretTemp: secret.base32 });
-    await user.updateAsync();
+    user.set('totpSecretTemp', secret.base32);
+    await user.save();
 
     const code = await qrcode.toDataURL(secret.otpauth_url);
 
-    callback(null, code);
+    console.log(code);
   } catch (e) {
-    callback(null, 'ERROR: ' + e);
+    console.log('ERROR:', e);
   }
 };
 
-const completeHandler = async (event, context, callback) => {
-  console.log('2FA complete handler triggered', JSON.stringify(event, null, 2));
+const completeHandler = async (email, code) => {
+  console.log('2FA complete handler triggered');
 
-  if (!event.email) {
-    callback(null, 'E-mail must be supplied');
+  if (!email) {
+    console.log('E-mail must be supplied');
     return;
   }
 
-  if (!event.code) {
-    callback(null, 'Verification code must be supplied');
+  if (!code) {
+    console.log('Verification code must be supplied');
     return;
   }
 
   let user;
   try {
     [user] = (await User.scan()
-      .where('email').equals(event.email.toLowerCase())
-      .execAsync()).Items;
+      .equalTo('email', email.toLowerCase())
+      .find());
   } catch (e) {
-    callback(null, 'User not found');
+    console.log('User not found');
     return;
   }
 
@@ -61,24 +61,22 @@ const completeHandler = async (event, context, callback) => {
     const verified = speakeasy.totp.verify({
       secret: user.get('totpSecretTemp'),
       encoding: 'base32',
-      token: event.code,
+      token: code,
     });
 
     if (verified) {
-      user.set({
-        totpSecretTemp: null,
-        totpSecret: user.get('totpSecretTemp'),
-        securityStamp: undefined,
-      });
+      user.set('totpSecret', user.get('totpSecretTemp'));
+      user.set('totpSecretTemp', null);
+      user.set('securityStamp', undefined);
 
-      await user.updateAsync();
+      await user.save();
 
-      callback(null, 'OK, 2FA setup.');
+      console.log('OK, 2FA setup.');
     } else {
-      callback(null, 'ERROR, Could not verify supplied code, please try again.');
+      console.log('ERROR, Could not verify supplied code, please try again.');
     }
   } catch (e) {
-    callback(null, 'ERROR: ' + e);
+    console.log('ERROR:', e);
   }
 };
 
