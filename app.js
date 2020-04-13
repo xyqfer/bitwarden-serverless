@@ -86,6 +86,7 @@ app.ws('/notifications/hub', function (ws) {
             }
         } catch(e) {
             console.error('handle err:', e);
+            ws.send(msg);
         }
     });
 });
