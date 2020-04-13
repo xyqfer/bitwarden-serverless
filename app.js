@@ -71,10 +71,10 @@ app.get('/icons/:domain/icon.png', require('./routes/icons'));
 expressWs(app);
 app.ws('/notifications/hub', function (ws) {
     ws.on('message', function (msg) {
-        console.log('notifications', msg);
+        console.log('Notifications handle', msg);
 
         try {
-            const data = JSON.parse(msg.trim());
+            const data = JSON.parse(msg.slice(0, -1));
 
             if (data.protocol === 'messagepack' && data.version === 1) {
                 const RECORD_SEPARATOR = 0x1e;
