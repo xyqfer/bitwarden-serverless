@@ -31,9 +31,9 @@ AV.Cloud.define('BACKUP', function (req) {
         const data = await extractData();
         fs.writeFileSync(`${workDir}/${repoName}/db.json`, JSON.stringify(data));
 
-        git = Git(`${workDir}/${repoName}`)
-            .addConfig('user.name', userName)
-            .addConfig('user.email', userEmail);
+        git = Git(`${workDir}/${repoName}`);
+        await git.addConfig('user.name', userName);
+        await git.addConfig('user.email', userEmail);
         await git.add('*');
         await git.commit('add db backup');
         await git.push('origin');
