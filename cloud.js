@@ -16,11 +16,12 @@ AV.Cloud.define('TWO_FACTOR_COMPLETE', function (req) {
 
 AV.Cloud.define('BACKUP', function (req) {
     (async () => {
-        const username = process.env.GITHUB_USER_NAME;
+        const userName = process.env.GITHUB_USER_NAME;
+        const userEmail = process.env.GITHUB_USER_EMAIL;
         const password = process.env.GITHUB_PASSWORD;
         const repoName = process.env.GITHUB_REPO_NAME;
 
-        const remote = `https://${username}:${password}@github.com/${username}/${repoName}`;
+        const remote = `https://${userName}:${password}@github.com/${userName}/${repoName}`;
         const workDir = '/tmp';
         let git = Git(workDir);
 
@@ -30,7 +31,9 @@ AV.Cloud.define('BACKUP', function (req) {
         const data = await extractData();
         fs.writeFileSync(`${workDir}/${repoName}/db.json`, JSON.stringify(data));
 
-        git = Git(`${workDir}/${repoName}`);
+        git = Git(`${workDir}/${repoName}`)
+            .addConfig('user.name', userName)
+            .addConfig('user.email', userEmail);
         await git.add('*');
         await git.commit('add db backup');
         await git.push('origin');
