@@ -3,7 +3,7 @@ const { User } = require('./lib/models');
 const { buildUserDocument } = require('./lib/bitwarden');
 
 const handler = async (req, res) => {
-  console.log('Registration handler triggered');
+  console.log('Registration handler triggered', req.body);
   if (process.env.DISABLE_USER_REGISTRATION === 'true') {
     utils.validationError('Signups are not permitted', res);
     return;
