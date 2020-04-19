@@ -170,11 +170,40 @@ const Folder = (() => {
   };
 })();
 
+const extractData = async () => {
+  const data = {};
+  const tables = [
+    devicesTableName,
+    usersTableName,
+    cipherTableName,
+    folderTableName
+  ];
+
+  for (let i = 0; i < tables.length; i++) {
+    const table = tables[i];
+    const query = new AV.Query(table);
+    query.limit(1000);
+    const result = await query.find();
+    let dbData = [];
+
+    if (result && result.length > 0) {
+      result.forEach((item) => {
+        dbData.push(item.toFullJSON());
+      });
+    }
+
+    data[table] = dbData;
+  }
+
+  return data;
+};
+
 module.exports = {
   CIPHER_MODEL_VERSION,
   USER_MODEL_VERSION,
   Device,
   User,
   Cipher,
-  Folder
+  Folder,
+  extractData
 };

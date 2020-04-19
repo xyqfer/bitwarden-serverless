@@ -1,7 +1,8 @@
 const AV = require('leanengine');
 const fs = require('fs');
-const git = require('simple-git/promise')();
+const Git = require('simple-git/promise');
 const { setupHandler, completeHandler } = require('./routes/two_factor');
+const { extractData } = require('./routes/lib/models');
 
 AV.Cloud.define('TWO_FACTOR_SETUP', function (req) {
     const { email } = req.params;
@@ -15,17 +16,21 @@ AV.Cloud.define('TWO_FACTOR_COMPLETE', function (req) {
 
 AV.Cloud.define('BACKUP', function (req) {
     (async () => {
-        const url = process.env.GITHUB_URL;
-        const remote = `https://${process.env.GITHUB_USER_NAME}:${process.env.GITHUB_PASSWORD}@${url}`;
+        const username = process.env.GITHUB_USER_NAME;
+        const password = process.env.GITHUB_PASSWORD;
+        const repoName = process.env.GITHUB_REPO_NAME;
+
+        const remote = `https://${username}:${password}@github.com/${username}/${repoName}`;
+        const workDir = '/tmp';
+        let git = Git(workDir);
 
         await git.silent(false);
         await git.clone(remote);
 
-        fs.writeFileSync('./bitwarden-backup/db.json', JSON.stringify({
-            a: 1,
-            b: 2,
-        }));
+        const data = await extractData();
+        fs.writeFileSync(`${workDir}/${repoName}/db.json`, JSON.stringify(data));
 
+        git = Git(`${workDir}/${repoName}`);
         await git.add('*');
         await git.commit('add db backup');
         await git.push('origin');
