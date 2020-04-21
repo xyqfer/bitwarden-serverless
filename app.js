@@ -81,7 +81,7 @@ app.ws('/notifications/hub', async (ws, req) => {
     }
 
     ws.on('message', (msg) => {
-        console.log('Notifications handle', msg);
+        // console.log('Notifications handle', msg);
 
         if (typeof msg === 'string') {
             const data = JSON.parse(msg.slice(0, -1));

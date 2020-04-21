@@ -20,18 +20,20 @@ AV.Cloud.define('BACKUP', function (req) {
         const userEmail = process.env.GITHUB_USER_EMAIL;
         const password = process.env.GITHUB_PASSWORD;
         const repoName = process.env.GITHUB_REPO_NAME;
-
-        const remote = `https://${userName}:${password}@github.com/${userName}/${repoName}`;
         const workDir = '/tmp';
-        let git = Git(workDir);
 
-        await git.silent(false);
-        await git.clone(remote);
+        if (!fs.existsSync(`${workDir}/${repoName}`)) {
+            const remote = `https://${userName}:${password}@github.com/${userName}/${repoName}`;
+            let git = Git(workDir);
+            await git.silent(false);
+            await git.clone(remote);   
+        }
 
         const data = await extractData();
         fs.writeFileSync(`${workDir}/${repoName}/db.json`, JSON.stringify(data));
 
-        git = Git(`${workDir}/${repoName}`);
+        let git = Git(`${workDir}/${repoName}`);
+        await git.silent(false);
         await git.addConfig('user.name', userName);
         await git.addConfig('user.email', userEmail);
         await git.add('*');
