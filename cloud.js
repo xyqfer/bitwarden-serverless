@@ -15,6 +15,7 @@ AV.Cloud.define('TWO_FACTOR_COMPLETE', function (req) {
 });
 
 AV.Cloud.define('BACKUP', function (req) {
+    console.log('BACKUP Start');
     (async () => {
         const userName = process.env.GITHUB_USER_NAME;
         const userEmail = process.env.GITHUB_USER_EMAIL;
@@ -39,5 +40,7 @@ AV.Cloud.define('BACKUP', function (req) {
         await git.add('*');
         await git.commit('add db backup');
         await git.push('origin');
+
+        console.log('BACKUP Finish');
     })();
 });
