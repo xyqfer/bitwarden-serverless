@@ -53,6 +53,6 @@ AV.Cloud.define('BACKUP', function (req) {
             console.error(e);
         }
 
-        axios.get(process.env.NOTIFICATION_URL + backupResult);
+        axios.get(process.env.NOTIFICATION_URL + encodeURIComponent(backupResult));
     })();
 });
