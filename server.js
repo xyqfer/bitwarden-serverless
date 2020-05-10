@@ -25,4 +25,6 @@ app.listen(PORT, function (err) {
     process.on('unhandledRejection', function (reason, p) {
         console.error('Unhandled Rejection at: Promise ', p, ' reason: ', reason.stack);
     });
+
+    require('./ping');
 });
